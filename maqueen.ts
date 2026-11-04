@@ -63,7 +63,9 @@ namespace maqueenCompat {
         //% blockId="maqueen_compat_led_left" block="left"
         LEDLeft = 8,
         //% blockId="maqueen_compat_led_right" block="right"
-        LEDRight = 12
+        LEDRight = 12,
+        //% blockId="maqueen_compat_led_all" block="all"
+        LEDAll = 0
     }
 
     export enum LEDswitch {
@@ -250,9 +252,12 @@ namespace maqueenCompat {
     export function writeLED(led: LED, ledswitch: LEDswitch): void {
         if (activeBoardVersion() == BoardVersion.V5) {
             writeV5Led(led, ledswitch)
-        } else if (led == LED.LEDLeft) {
+            return
+        }
+        if (led == LED.LEDLeft || led == LED.LEDAll) {
             pins.digitalWritePin(DigitalPin.P8, ledswitch)
-        } else if (led == LED.LEDRight) {
+        }
+        if (led == LED.LEDRight || led == LED.LEDAll) {
             pins.digitalWritePin(DigitalPin.P12, ledswitch)
         }
     }
@@ -360,9 +365,10 @@ namespace maqueenCompat {
 
     function writeV5Led(led: LED, ledswitch: LEDswitch): void {
         let color = ledswitch == LEDswitch.turnOn ? 7 : 8
-        if (led == LED.LEDLeft) {
+        if (led == LED.LEDLeft || led == LED.LEDAll) {
             writeV5LedRegister(V5_RGB_LEFT, color)
-        } else if (led == LED.LEDRight) {
+        }
+        if (led == LED.LEDRight || led == LED.LEDAll) {
             writeV5LedRegister(V5_RGB_RIGHT, color)
         }
     }

@@ -43,6 +43,7 @@ maqueenCompat.readPatrol(maqueenCompat.Patrol.PatrolLeft)
 maqueenCompat.Ultrasonic()
 maqueenCompat.servoRun(maqueenCompat.Servos.S1, 90)
 maqueenCompat.writeLED(maqueenCompat.LED.LEDLeft, maqueenCompat.LEDswitch.turnOn)
+maqueenCompat.writeLED(maqueenCompat.LED.LEDAll, maqueenCompat.LEDswitch.turnOff)
 ```
 
 ## 例

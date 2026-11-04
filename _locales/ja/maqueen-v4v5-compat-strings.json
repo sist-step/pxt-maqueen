@@ -21,6 +21,7 @@
     "maqueenCompat.Voltage.Low|block": "黒（0）",
     "maqueenCompat.LED.LEDLeft|block": "左",
     "maqueenCompat.LED.LEDRight|block": "右",
+    "maqueenCompat.LED.LEDAll|block": "両方",
     "maqueenCompat.LEDswitch.turnOn|block": "つける",
     "maqueenCompat.LEDswitch.turnOff|block": "消す",
     "maqueenCompat.init|block": "Maqueen 互換を準備する %board",

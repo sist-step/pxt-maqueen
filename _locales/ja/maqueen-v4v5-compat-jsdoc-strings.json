@@ -19,7 +19,7 @@
     "maqueenCompat.servoRun|param|index": "サーボのチャンネル",
     "maqueenCompat.setBoardVersion": "Maqueen の種類を選びます。通常は自動で十分です。ラインセンサーの値が変わらない場合は v5 を選びます。",
     "maqueenCompat.setBoardVersion|param|board": "ボードの種類",
-    "maqueenCompat.writeLED": "LED（右または左）をつけたり、消したりします。",
+    "maqueenCompat.writeLED": "LED（右、左または両方）をつけたり、消したりします。",
     "maqueenCompat.writeLED|param|led": "操作する LED",
     "maqueenCompat.writeLED|param|ledswitch": "実行する操作"
 }
