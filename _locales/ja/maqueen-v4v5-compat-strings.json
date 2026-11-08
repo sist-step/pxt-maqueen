@@ -25,7 +25,7 @@
     "maqueenCompat.LEDswitch.turnOn|block": "つける",
     "maqueenCompat.LEDswitch.turnOff|block": "消す",
     "maqueenCompat.init|block": "Maqueen 互換を準備する %board",
-    "maqueenCompat.setBoardVersion|block": "Maqueen 互換の種類を %board にする",
+    "maqueenCompat.setBoardVersion|block": "Maqueen 互換のボードを %board にする",
     "maqueenCompat.IR_read_version|block": "製品情報を取得",
     "maqueenCompat.motorRun|block": "%index|のモーターを|%direction|へ 速さ|%speed|で回す",
     "maqueenCompat.motorStop|block": "%motors|のモーターを止める",

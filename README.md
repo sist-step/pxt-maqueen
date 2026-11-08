@@ -18,18 +18,35 @@ https://github.com/Poseidon1024/pxt-maqueen
 maqueenCompat.init(maqueenCompat.BoardVersion.Auto)
 ```
 
-通常は `Auto` で動作します。Maqueen v5 のラインセンサー値が変わらない場合は、ボード種別を明示してください。
+通常は `Auto` を使います。`init` で指定するのは、ラインセンサーの値の種類です。
+
+| 指定 | 動き |
+|---|---|
+| `Auto`（自動） | v4・v5 のどちらでも v4 と同じ値で動かします |
+| `V4` | v4 互換を明示します。v5 の実機でも v4 と同じ値で動かします（`Auto` と同じ動き） |
+| `V5` | Maqueen v5 本来の値のまま動かします。ラインセンサーの値は公式 Maqueen v5 拡張と同じく黒が `1`、白が `0` になります |
+
+実機のボード（v4 か v5 か）は自動で判別します。判別がうまくいかないときだけ、`setBoardVersion` でボードを明示してください。
 
 ```blocks
-maqueenCompat.init(maqueenCompat.BoardVersion.V5)
+maqueenCompat.setBoardVersion(maqueenCompat.BoardVersion.V5)
+maqueenCompat.init(maqueenCompat.BoardVersion.Auto)
 ```
+
+| 指定 | 動き |
+|---|---|
+| `Auto`（自動） | 実機を判別します（初期状態） |
+| `V4` | Maqueen v4 として、ピンでラインセンサーと LED を扱います |
+| `V5` | Maqueen v5 として、I2C でラインセンサーと LED を扱います |
 
 ## ラインセンサー
 
-`maqueenCompat.readPatrol(...)` は、Maqueen v4 と Maqueen v5 のどちらでも v4 と同じ値にそろえて返します。
+`maqueenCompat.readPatrol(...)` は、`Auto` と `V4` では Maqueen v4 と Maqueen v5 のどちらでも v4 と同じ値にそろえて返します。
 
 * `0`: 黒
 * `1`: 白
+
+`V5` を指定したときだけ、黒が `1`、白が `0` になります。ラインセンサーのイベント（白／黒のとき）は、どの指定でも色どおりに動きます。
 
 Maqueen v5 では、左センサーと右センサーを v4 の左右センサーとして扱います。中央センサーはこの互換 API では使いません。
 

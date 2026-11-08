@@ -87,21 +87,25 @@ namespace maqueenCompat {
     const V5_ADC_RIGHT = 36
     const V5_SYS_INIT = 70
 
-    let boardMode = BoardVersion.Auto
+    // Value style chosen by init(): Auto/V4 = v4-style values, V5 = Maqueen v5 native values.
+    let valueMode = BoardVersion.Auto
+    // Hardware chosen by setBoardVersion(): Auto = detect, V4/V5 = use that board's access path.
+    let hardwareMode = BoardVersion.Auto
     let detectedBoard = BoardVersion.Auto
     let v5Initialized = false
     let lineCallbacks: MaqueenCompatLineEvent[] = []
     let patrolScanStep = 1
 
     /**
-     * Select the Maqueen version. Auto is usually enough; choose v5 if line sensor values do not change.
+     * Explicitly select the Maqueen board (hardware). Auto detects the board.
+     * Use this only when detection does not work.
      * @param board Board version
      */
     //% weight=100
     //% blockId=maqueen_compat_board block="Maqueen Compat board %board"
     //% board.fieldEditor="gridpicker" board.fieldOptions.columns=3
     export function setBoardVersion(board: BoardVersion): void {
-        boardMode = board
+        hardwareMode = board
         detectedBoard = BoardVersion.Auto
         v5Initialized = false
         if (board == BoardVersion.V5) {
@@ -111,17 +115,16 @@ namespace maqueenCompat {
 
     /**
      * Prepare Maqueen before running a lesson program.
-     * @param board Board version
+     * Auto and v4 give v4-style values on both boards; v5 keeps Maqueen v5 native values (black is 1).
+     * @param board Value style
      */
     //% weight=110
     //% blockId=maqueen_compat_init block="prepare Maqueen Compat %board"
     //% board.defl=maqueenCompat.BoardVersion.Auto
     //% board.fieldEditor="gridpicker" board.fieldOptions.columns=3
     export function init(board: BoardVersion = BoardVersion.Auto): void {
-        setBoardVersion(board)
-        if (board == BoardVersion.Auto) {
-            activeBoardVersion()
-        }
+        valueMode = board
+        activeBoardVersion()
     }
 
     /**
@@ -180,6 +183,16 @@ namespace maqueenCompat {
     //% blockId=maqueen_compat_read_patrol block="read |%patrol line tracking sensor"
     //% patrol.fieldEditor="gridpicker" patrol.fieldOptions.columns=2
     export function readPatrol(patrol: Patrol): number {
+        let compatValue = readPatrolCompat(patrol)
+        if (valueMode == BoardVersion.V5 && compatValue >= 0) {
+            // V5 mode keeps Maqueen v5 native values (same as the official extension): black is 1.
+            return 1 - compatValue
+        }
+        return compatValue
+    }
+
+    // v4-style value regardless of mode: black is 0, white is 1.
+    function readPatrolCompat(patrol: Patrol): number {
         if (activeBoardVersion() == BoardVersion.V5) {
             return readV5PatrolAsV4(patrol)
         }
@@ -280,9 +293,9 @@ namespace maqueenCompat {
     }
 
     function activeBoardVersion(): BoardVersion {
-        if (boardMode == BoardVersion.V4) {
+        if (hardwareMode == BoardVersion.V4) {
             return BoardVersion.V4
-        } else if (boardMode == BoardVersion.V5) {
+        } else if (hardwareMode == BoardVersion.V5) {
             initV5Once()
             return BoardVersion.V5
         }
@@ -405,16 +418,16 @@ namespace maqueenCompat {
         let state = 0
         switch (patrolScanStep) {
             case 1:
-                state = readPatrol(Patrol.PatrolLeft) == 0 ? 0x10 : 0
+                state = readPatrolCompat(Patrol.PatrolLeft) == 0 ? 0x10 : 0
                 break
             case 2:
-                state = readPatrol(Patrol.PatrolLeft) == 1 ? 0x11 : 0
+                state = readPatrolCompat(Patrol.PatrolLeft) == 1 ? 0x11 : 0
                 break
             case 3:
-                state = readPatrol(Patrol.PatrolRight) == 0 ? 0x20 : 0
+                state = readPatrolCompat(Patrol.PatrolRight) == 0 ? 0x20 : 0
                 break
             default:
-                state = readPatrol(Patrol.PatrolRight) == 1 ? 0x21 : 0
+                state = readPatrolCompat(Patrol.PatrolRight) == 1 ? 0x21 : 0
                 break
         }
 
